@@ -5,5 +5,15 @@ import com.raouf.domain.util.Resource
 import kotlinx.coroutines.flow.Flow
 
 interface ProductRepository  {
-   suspend fun getProduct () : Flow<Resource<List<Product>>>
+
+   suspend fun getProduct (
+      category : String
+   ) : Flow<Resource<List<Product>>>
+
+   suspend fun getCategories () : List<String>
+
+   suspend fun getProductById (
+      id : Int
+   ) : Product?
+
 }

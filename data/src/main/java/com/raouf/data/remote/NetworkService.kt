@@ -19,12 +19,3 @@ interface NetworkService {
     suspend fun getCategories(): ArrayList<String>
 
 }
-
-
-
-
-
-
-
-
-}
