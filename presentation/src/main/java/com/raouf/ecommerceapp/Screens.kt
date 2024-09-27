@@ -1,4 +1,5 @@
 package com.raouf.ecommerceapp
 
-class Screens {
+sealed class Screens(val route : String) {
+    data object Home : Screens(route = "Home")
 }
