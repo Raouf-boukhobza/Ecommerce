@@ -1,18 +1,22 @@
 package com.raouf.ecommerceapp.ui.home
 
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.raouf.domain.useCase.GetProductsUseCase
+import com.raouf.domain.util.Category
 import com.raouf.domain.util.Resource
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
-    private val getProductsUseCase: GetProductsUseCase
+    private val getProductsUseCase: GetProductsUseCase,
 ) : ViewModel() {
+
 
     private val _uiState: MutableStateFlow<HomeScreenState> = MutableStateFlow(HomeScreenState())
     val uiState = _uiState.asStateFlow()
@@ -20,10 +24,19 @@ class HomeViewModel(
     init {
         getProducts()
     }
-    private fun getProducts() {
 
+    fun changeCategory(category: Category){
+        _uiState.update {
+            it.copy(
+                category = category
+            )
+        }
+    }
+
+
+     fun getProducts(category: String = uiState.value.category.slug) {
         viewModelScope.launch {
-            getProductsUseCase.execute().collectLatest { result ->
+            getProductsUseCase.execute(category = category).collectLatest { result ->
 
                 when (result) {
                     is Resource.Success -> {

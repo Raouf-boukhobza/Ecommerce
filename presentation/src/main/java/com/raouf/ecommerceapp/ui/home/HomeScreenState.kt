@@ -6,6 +6,6 @@ import com.raouf.domain.util.Category
 data class HomeScreenState(
     val error : String = "",
     val isLoading : Boolean = false,
-    val category: String = Category.MenClothes.name,
+    val category : Category = Category.Watches,
     val productsList: List<Product> = emptyList()
 )

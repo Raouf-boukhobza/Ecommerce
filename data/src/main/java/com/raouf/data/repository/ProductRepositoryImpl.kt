@@ -18,12 +18,12 @@ class ProductRepositoryImpl (
 
 
 
-    override suspend fun getProduct(
+    override suspend fun getProductList(
         category : String
-    ):Flow<Resource<List<Product>>> {
+    ):Flow<Resource<List<Product>>>{
         return flow {
             emit(Resource.IsLoading(true))
-            val product =try {
+            val data = try {
                 networkService.getProducts(categoryName = category)
             } catch (e : IOException){
                 e.printStackTrace()
@@ -36,7 +36,7 @@ class ProductRepositoryImpl (
                 return@flow
             }
             emit(Resource.Success(
-                data = product.map {
+                data = data.products.map {
                     it.toProduct()
                 }
             ))
@@ -44,22 +44,6 @@ class ProductRepositoryImpl (
         }.flowOn(Dispatchers.IO)
     }
 
-    override suspend fun getCategories(): List<String> {
-        val categories = try {
-            networkService.getCategories()
-        }catch (e : HttpException ){
-            e.printStackTrace()
-            return emptyList()
-        }catch (e : IOException){
-            e.printStackTrace()
-            return emptyList()
-        }catch (e : Exception){
-            e.printStackTrace()
-            return emptyList()
-        }
-
-        return categories
-    }
 
     override suspend fun getProductById(id : Int): Product? {
         val product = try {

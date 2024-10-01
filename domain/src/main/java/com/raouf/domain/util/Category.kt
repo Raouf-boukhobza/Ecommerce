@@ -1,8 +1,14 @@
 package com.raouf.domain.util
 
-sealed class Category(val name : String){
-    data object MenClothes : Category(name = "men's clothing")
-    data object WomenClothes : Category(name = "women's clothing")
-    data object Jewelery : Category(name = "jewelery")
-    data object Electronics : Category(name = "electronics")
+
+// I use this categories class because i don't wanna use all the categories in the api
+
+sealed class Category(val name: String, val slug: String) {
+    data object Watches : Category(name = "Mens Watches", slug = "mens-watches")
+    data object Shoes : Category(name = "Mens Shoes", slug = "mens-shoes")
+    data object Sport : Category( name = "Sports Accessories",slug = "sports-accessories")
+    data object Tops : Category(slug = "tops", name = "Tops")
+    data object Vehicle : Category(slug = "vehicle", name = "Vehicle")
+    data object HomeDecoration: Category(name = "Home Decoration" , slug ="home-decoration" )
+
 }
