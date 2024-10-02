@@ -74,4 +74,6 @@ dependencies {
 
     implementation libs.coil // Replace with the latest version
     implementation libs.coil.compose // For Jetpack Compose integration
+
+    implementation(libs.androidx.material.icons.extended)
 }

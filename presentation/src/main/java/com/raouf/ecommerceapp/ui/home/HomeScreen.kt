@@ -42,7 +42,6 @@ import coil.size.Size
 import com.raouf.domain.model.Product
 import com.raouf.domain.util.Category
 import org.koin.androidx.compose.koinViewModel
-import java.time.format.TextStyle
 
 @Composable
 fun HomeScreen(viewModel: HomeViewModel = koinViewModel()) {
@@ -58,7 +57,7 @@ fun HomeScreen(viewModel: HomeViewModel = koinViewModel()) {
             modifier = Modifier.padding(start = 8.dp, bottom = 12.dp)
         )
         val categories = listOf(
-            Category.Watches,
+            Category.MenWatches,
             Category.Tops,
             Category.HomeDecoration,
             Category.Sport,
@@ -100,13 +99,12 @@ fun HomeScreen(viewModel: HomeViewModel = koinViewModel()) {
                 columns = GridCells.Adaptive(minSize = 150.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                items(state.productsList , key = {it.id}) { product ->
+                items(state.productsList, key = { it.id }) { product ->
                     ProductCard(product)
                 }
             }
 
         }
-
 
     }
 }
@@ -142,9 +140,14 @@ fun ProductCard(product: Product) {
                         fontWeight = FontWeight.Bold,
                         fontStyle = FontStyle.Italic,
                         color = Color.Red,
-                        modifier = Modifier.align(Alignment.TopEnd)
+                        modifier = Modifier
+                            .align(Alignment.TopEnd)
                             .padding(12.dp)
-                            .border(width = 1.dp , color = Color.Red , shape = RoundedCornerShape(16.dp) )
+                            .border(
+                                width = 1.dp,
+                                color = Color.Red,
+                                shape = RoundedCornerShape(16.dp)
+                            )
                             .padding(5.dp)
 
                     )
@@ -165,8 +168,10 @@ fun ProductCard(product: Product) {
         Spacer(modifier = Modifier.height(8.dp))
 
 
-        Row(modifier = Modifier.fillMaxWidth(0.7f),
-            horizontalArrangement = Arrangement.SpaceEvenly ,){
+        Row(
+            modifier = Modifier.fillMaxWidth(0.7f),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+        ) {
             Text(
                 text = "$${product.priceAfterDiscount}",
                 fontSize = 14.sp,
@@ -175,8 +180,8 @@ fun ProductCard(product: Product) {
                 color = Color.DarkGray,
                 textAlign = TextAlign.Center
             )
-            if (product.discountPercentage > 10){
-                Box(contentAlignment = Alignment.Center){
+            if (product.discountPercentage > 10) {
+                Box(contentAlignment = Alignment.Center) {
                     Text(
                         text = "$${product.price}",
                         fontSize = 13.sp,
@@ -192,8 +197,6 @@ fun ProductCard(product: Product) {
                     )
                 }
             }
-
-
         }
     }
 }
