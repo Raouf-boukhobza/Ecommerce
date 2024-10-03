@@ -8,7 +8,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.koin.core.qualifier._q
 
 
 class DetailScreenViewModel(
@@ -19,40 +18,54 @@ class DetailScreenViewModel(
     private val _detailState = MutableStateFlow(DetailScreenState())
     val detailState = _detailState.asStateFlow()
 
-    fun getProduct(id: Int) {
-        viewModelScope.launch {
-            getProductById.invoke(id).let { result ->
-                when (result) {
 
-                    is Resource.Error -> {
-                        _detailState.update {
-                            it.copy(
-                                isLoading = false
-                            )
-                        }
-                    }
+    fun onEvent(event : DetailScreenEvents){
+        when(event){
+            is DetailScreenEvents.GetProduct -> {
+                viewModelScope.launch {
+                    getProductById(event.id).let { result ->
+                        when (result) {
 
-                    is Resource.IsLoading -> {
-                        _detailState.update {
-                            it.copy(
-                                isLoading = result.isLoading
-                            )
-                        }
-                    }
+                            is Resource.Error -> {
+                                _detailState.update {
+                                    it.copy(
+                                        isLoading = false
+                                    )
+                                }
+                            }
 
-                    is Resource.Success -> {
-                        val data = result.data
-                        data?.let {
-                            _detailState.update {
-                                it.copy(
-                                    selectedProduct = data
-                                )
+                            is Resource.IsLoading -> {
+                                _detailState.update {
+                                    it.copy(
+                                        isLoading = result.isLoading
+                                    )
+                                }
+                            }
+
+                            is Resource.Success -> {
+                                val data = result.data
+                                data?.let {
+                                    _detailState.update {
+                                        it.copy(
+                                            selectedProduct = data
+                                        )
+                                    }
+                                }
                             }
                         }
                     }
                 }
             }
+            is DetailScreenEvents.SelectImage -> {
+                _detailState.update {
+                    it.copy(
+                        selectedImageIndex = event.index
+                    )
+                }
+            }
         }
-
     }
+
+
+
 }

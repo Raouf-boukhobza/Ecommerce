@@ -24,6 +24,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,6 +33,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -41,7 +43,9 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.raouf.ecommerceapp.ui.detail.DetailScreen
+import com.raouf.ecommerceapp.ui.detail.DetailScreenViewModel
 import com.raouf.ecommerceapp.ui.home.HomeScreen
+import org.koin.androidx.compose.koinViewModel
 
 
 @Composable
@@ -49,9 +53,11 @@ fun MainNavGraph() {
     val navController: NavHostController = rememberNavController()
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        topBar = { TopBar(
-            navController = navController
-        ) },
+        topBar = {
+            TopBar(
+                navController = navController
+            )
+        },
         bottomBar = { BottomBar(navController) }
     ) { padding ->
 
@@ -84,8 +90,13 @@ fun MainNavGraph() {
                     }
                 )
             ) {
+                val detailViewModel: DetailScreenViewModel = koinViewModel()
                 val id = it.arguments?.getInt("id") ?: -1
-                DetailScreen(id = id)
+                DetailScreen(
+                    id = id,
+                    state = detailViewModel.detailState.collectAsState().value,
+                    onEvent = detailViewModel::onEvent
+                )
             }
         }
     }
@@ -123,7 +134,7 @@ fun TopBar(navController: NavHostController) {
                 }
             }
         )
-    }else{
+    } else {
         TopAppBar(
             title = {},
             navigationIcon = {
