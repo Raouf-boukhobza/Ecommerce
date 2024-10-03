@@ -39,6 +39,7 @@ class HomeViewModel(
             getProductsUseCase.execute(category = category).collectLatest { result ->
 
                 when (result) {
+
                     is Resource.Success -> {
                         val productList = result.data
                         productList?.let {
@@ -65,6 +66,21 @@ class HomeViewModel(
                             )
                         }
                     }
+                }
+                if (category == Category.MenWatches.slug) {
+                  getProductsUseCase.execute(Category.womenWatches.slug).collectLatest { result2 ->
+                      if (result2 is Resource.Success){
+                          val data = result2.data
+                          data?.let {
+                              _uiState.update {
+                                  it.copy(
+                                      productsList = uiState.value.productsList + data
+                                  )
+                              }
+                          }
+
+                      }
+                  }
                 }
 
             }

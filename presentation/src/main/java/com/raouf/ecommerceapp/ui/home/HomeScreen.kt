@@ -2,11 +2,13 @@ package com.raouf.ecommerceapp.ui.home
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -28,6 +30,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.motionEventSpy
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontStyle
@@ -44,7 +47,10 @@ import com.raouf.domain.util.Category
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun HomeScreen(viewModel: HomeViewModel = koinViewModel()) {
+fun HomeScreen(
+    viewModel: HomeViewModel = koinViewModel(),
+    navigateToDetail: (Int) -> Unit
+) {
     val state = viewModel.uiState.collectAsState().value
 
 
@@ -100,10 +106,17 @@ fun HomeScreen(viewModel: HomeViewModel = koinViewModel()) {
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 items(state.productsList, key = { it.id }) { product ->
-                    ProductCard(product)
+                    ProductCard(product, navigateToDetail)
                 }
             }
 
+        } else {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
         }
 
     }
@@ -111,9 +124,12 @@ fun HomeScreen(viewModel: HomeViewModel = koinViewModel()) {
 
 
 @Composable
-fun ProductCard(product: Product) {
+fun ProductCard(product: Product, navigateToDetail: (Int) -> Unit) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.clickable {
+            navigateToDetail(product.id)
+        }.padding(bottom = 16.dp)
     ) {
         val imageState = rememberAsyncImagePainter(
             model = ImageRequest.Builder(LocalContext.current)

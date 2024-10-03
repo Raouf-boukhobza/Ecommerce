@@ -45,21 +45,23 @@ class ProductRepositoryImpl (
     }
 
 
-    override suspend fun getProductById(id : Int): Product? {
+    override suspend fun getProductById(id : Int): Resource<Product> {
         val product = try {
             networkService.getProductById(id = id)
         }catch (e : HttpException ){
             e.printStackTrace()
-            return null
+            return Resource.Error(message = e.message)
         }catch (e : IOException){
             e.printStackTrace()
-            return null
+            return Resource.Error(message = e.message)
         }catch (e : Exception){
             e.printStackTrace()
-            return null
+            return Resource.Error(message = e.message)
         }
 
-        return product.toProduct()
+        return Resource.Success(
+            data = product.toProduct()
+        )
     }
 
 }

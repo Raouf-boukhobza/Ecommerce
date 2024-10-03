@@ -10,9 +10,8 @@ interface ProductRepository  {
       category : String
    ) : Flow<Resource<List<Product>>>
 
-
    suspend fun getProductById (
       id : Int
-   ) : Product?
+   ) : Resource <Product>
 
 }
